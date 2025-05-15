@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>You Call We Haul</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Exo 2', sans-serif;
+    }
+
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+
+    .leaflet-popup-content {
+      font-size: 1rem;
+      max-width: 240px;
+      word-wrap: break-word;
+    }
+
+    .leaflet-popup-content img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .pin-emoji {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .instructions-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ffffffee;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      max-width: 90%;
+      width: 320px;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+      animation: fadeIn 0.5s ease-in-out;
+      border: 1px solid #e0e0e0;
+    }
+
+    .instructions-container h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 18px;
+      color: #1c1c1c;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .instructions-container h3::before {
+      content: "🗺️";
+      margin-right: 8px;
+    }
+
+    .instructions-container p {
+      margin: 0;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .map-logo {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      width: 160px;
+      max-width: 50vw;
+      opacity: 0.6;
+      z-index: 999;
+      pointer-events: none;
+      border-radius: 12px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .instructions-container {
+        bottom: 10px;
+        right: 10px;
+        font-size: 13px;
+        padding: 14px;
+      }
+
+      .instructions-container h3 {
+        font-size: 16px;
+      }
+
+      .map-logo {
+        width: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <img src="images/Screenshot 2025-05-14 201616.png" alt="YCWH Logo" class="map-logo">
+
+  <div class="instructions-container">
+    <h3>You Call We Haul on a Map</h3>
+    <p>📍 Click on the pushpins to see where we've been lately across the United States!</p>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map', {
+      center: [39.8283, -98.5795],
+      zoom: 4,
+      minZoom: 4,
+      maxZoom: 7,
+      maxBounds: [
+        [24.396308, -125.0],
+        [49.384358, -66.93457]
+      ],
+      maxBoundsViscosity: 1.0,
+      zoomControl: true
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    const projects = [
+      { coords: [41.4901, -71.3128], city: 'Newport, RI', description: 'PROJECT DESCRIPTION HERE', image: 'images/mapcar.jpg' },
+      { coords: [37.3382, -121.8863], city: 'San Jose, CA', description: 'PROJECT DESCRIPTION HERE', image: 'images/mapcar.jpg' },
+      { coords: [34.6700, -98.3950], city: 'Fort Sill, OK', description: 'PROJECT DESCRIPTION HERE', image: 'images/mapcar.jpg' },
+      { coords: [41.8781, -87.6298], city: 'Chicago, IL', description: 'PROJECT DESCRIPTION HERE', image: 'images/mapcar.jpg' },
+      { coords: [42.8864, -78.8784], city: 'Buffalo, NY', description: 'PROJECT DESCRIPTION HERE', image: 'images/mapcar.jpg' },
+      { coords: [28.5383, -81.3792], city: 'Orlando, FL', description: 'PROJECT DESCRIPTION HERE', image: 'images/mapcar.jpg' },  
+      { coords: [47.2529, -122.4443], city: 'Tacoma, WA', description: 'PROJECT DESCRIPTION HERE', image: 'images/mapcar.jpg' }
+    ];
+
+    projects.forEach(project => {
+      L.marker(project.coords, {
+        icon: L.divIcon({
+          className: 'pin-emoji',
+          html: '📍'
+        })
+      })
+      .addTo(map)
+      .bindPopup(`
+        <strong>${project.city}</strong><br>
+        ${project.description}<br>
+        <img src="${project.image}" alt="${project.city} project">
+      `);
+    });
+  </script>
+</body>
+</html>
